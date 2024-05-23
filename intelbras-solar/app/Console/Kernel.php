@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('intelbras:verificar-geracao')->everyMinute()->between('6:00', '20:00');
+        $schedule->command('intelbras:verificar-geracao')->everyMinute();//->between('6:00', '20:00');
     }
 
     /**

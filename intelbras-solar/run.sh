@@ -12,5 +12,5 @@ if ! [[ -v LOG_LEVEL ]]; then
     export LOG_LEVEL=$(bashio::config 'log_level')
 fi
 
-echo "Running HTTP API..."
-/usr/bin/supervisord -c /home/app/docker-files/supervisord/webapi.conf
+echo "Running schedules..."
+/usr/bin/supervisord -c /home/app/docker-files/supervisord/app.conf

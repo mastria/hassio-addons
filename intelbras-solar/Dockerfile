@@ -27,7 +27,9 @@ RUN apk add --no-cache \
     php82-pcntl \
     php82-posix
 
-RUN mkdir /home/app
+RUN sed -i 's/;daemonize = yes/daemonize = no/' /etc/php82/php-fpm.conf
+
+RUN mkdir -p /home/app
 COPY ./ /home/app
 WORKDIR /home/app
 RUN composer install --no-interaction --no-dev

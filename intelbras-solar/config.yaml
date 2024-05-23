@@ -1,6 +1,6 @@
 name: "Intelbras Solar"
 description: Integração com o painel da Intelbras Solar
-version: 1.0.0
+version: 1.0.1
 slug: intelbras-solar
 url: https://github.com/mastria/hassio-addons/tree/main/intelbras-solar
 arch:
@@ -21,3 +21,4 @@ schema:
   log_level: list(emergency|alert|critical|error|warning|notice|info|debug)
 startup: application
 init: false
+homeassistant_api: true
