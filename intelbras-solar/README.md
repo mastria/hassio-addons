@@ -11,7 +11,7 @@ A aplicação foi desenvolvida utilizando o framework [Laravel](https://laravel.
 
 ## Instalação
 
-Adicione nosso repositório de complementos Hass.io à sua instância Hass.io.
+1. Adicione nosso repositório de complementos Hass.io à sua instância Hass.io.
 <br>
 
 `https://github.com/mastria/hassio-addons`
