@@ -1,11 +1,11 @@
 #!/usr/bin/with-contenv bashio
 
-if ! [[ -v PRINTER_IP ]]; then
-    export PRINTER_IP=$(bashio::config 'printer_ip')
+if ! [[ -v INTELBRAS_USER ]]; then
+    export INTELBRAS_USER=$(bashio::config 'usuario')
 fi
 
-if ! [[ -v PRINTER_PORT ]]; then
-    export PRINTER_PORT=$(bashio::config 'printer_port')
+if ! [[ -v INTELBRAS_PASSWORD ]]; then
+    export INTELBRAS_PASSWORD=$(bashio::config 'senha')
 fi
 
 if ! [[ -v LOG_LEVEL ]]; then
