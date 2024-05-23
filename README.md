@@ -6,7 +6,7 @@
 
 This repository contains the following add-ons
 
-### [Print Alexa Shopping List](./print-shopping-list)
+### [Intelbras Solar](./intelbras-solar)
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
