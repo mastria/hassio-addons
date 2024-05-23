@@ -18,6 +18,9 @@ return [
 
     'name' => env('APP_NAME', 'Print Shopping List'),
 
+    'printer_ip' => env('PRINTER_IP', '192.168.1.115'),
+    'printer_port' => env('PRINTER_PORT', 9100),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -42,7 +45,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', env('LOG_LEVEL') === 'debug'),
+    'debug' => 'debug',#(bool) env('APP_DEBUG', env('LOG_LEVEL') === 'debug'),
 
     /*
     |--------------------------------------------------------------------------

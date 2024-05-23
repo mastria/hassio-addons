@@ -13,9 +13,11 @@ ports:
   8000/tcp: 8000
 options:
   printer_ip: ""
+  printer_port: "9100"
   log_level: info
 schema:
   printer_ip: str?
+  printer_port: str?
   log_level: list(emergency|alert|critical|error|warning|notice|info|debug)
 startup: application
 init: false
