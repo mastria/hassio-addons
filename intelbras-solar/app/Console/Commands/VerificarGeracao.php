@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Services\UpdateSensorService;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 class VerificarGeracao extends Command
 {
@@ -21,7 +21,7 @@ class VerificarGeracao extends Command
      *
      * @var string
      */
-    protected $description = 'Verificar a quantidade de energia gerada por estação e envia por mensagem via Telegram';
+    protected $description = 'Verificar a quantidade de energia gerada por estação';
 
     /**
      * Execute the console command.
@@ -29,119 +29,53 @@ class VerificarGeracao extends Command
      * @return int
      */
 
-    public function status(string $status)
+    public function __construct(protected UpdateSensorService $updateSensorService)
     {
-        $_status = [
-            '1' => 'Normal',
-            '-1' => 'Desconectado',
-            '3' => 'Falha',
-            '4' => 'Desligado',
-        ];
-
-        return $_status[$status] ?? 'Desconhecido';
+        parent::__construct();
     }
 
     public function handle()
     {
+        $client = new Client(array(
+            'cookies' => true
+        ));
 
-        // Configure o cliente Guzzle HTTP
-        $client = new Client([
-            'base_uri' => 'http://supervisor/core/api/',
-            'headers' => [
-                'Authorization' => 'Bearer ' . env('SUPERVISOR_TOKEN'),
-                'Content-Type' => 'application/json',
-            ],
+        $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/login', [
+            'timeout' => 30,
+            'form_params' => [
+                'account' => config('intelbras.user'),
+                'password' => config('intelbras.password'),
+                'validateCode' => '',
+                'lang' => 'en'
+            ]
         ]);
 
-        // Verifique se o sensor já existe
-        try {
-            $response = $client->request('GET', 'states/sensor.intelbras_solar');
+        // Plantas
+        $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/index/getPlantListTitle');
 
-            // Verifique se o sensor já existe
-            if ($response->getStatusCode() === 200) {
-                // O sensor já existe, não é necessário criar
-                echo "O sensor 'sensor.intelbras_solar' já existe. Não é necessário criar novamente.\n";
-            }
-        } catch (Exception $e) {
-            // O sensor não existe, vamos criá-lo
-            echo "O sensor 'sensor.intelbras_solar' não existe. Criando...\n";
+        $plantas = json_decode($response->getBody(), true);
 
-            // Defina os dados para criar o sensor
-            $dadosSensor = [
-                'state' => 25, // Valor inicial do sensor
-                'attributes' => [
-                    'friendly_name' => 'Intelbras Solar', // Nome amigável do sensor
-                    'unit_of_measurement' => '°C', // Unidade de medida
-                ],
-            ];
-
-            // Faça uma solicitação POST para criar o sensor
-            $response = $client->request('POST', 'states/sensor.intelbras_solar', [
-                'json' => $dadosSensor,
-            ]);
-
-            // Verifique se a criação do sensor foi bem-sucedida
-            if ($response->getStatusCode() === 201) {
-                echo "O sensor 'sensor.intelbras_solar' foi criado com sucesso!\n";
-            } else {
-                echo "Erro ao criar o sensor 'sensor.intelbras_solar'\n";
-            }
+        if (!is_array($plantas) || count($plantas) == 0) {
+            throw new Exception('Erro ao verificar as plantas');
         }
 
-        // $telegramChatIds = config('telegram.chat_ids');
+        foreach ($plantas as $planta) {
+            $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/panel/getDevicesByPlantList', [
+                'form_params' => [
+                    'plantId' => $planta['id'],
+                    'currPage' => '1',
+                ]
+            ]);
 
-        // $client = new Client(array(
-        //     'cookies' => true
-        // ));
+            $retorno = json_decode($response->getBody(), true);
 
-        // $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/login', [
-        //     'timeout' => 30,
-        //     'form_params' => [
-        //         'account' => config('intelbras.user'),
-        //         'password' => config('intelbras.password'),
-        //         'validateCode' => '',
-        //         'lang' => 'en'
-        //     ]
-        // ]);
-
-        // // Geradores
-        // $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/panel/getDevicesByPlantList', [
-        //     'form_params' => [
-        //         'plantId' => config('intelbras.plant_id'),
-        //         'currPage' => '1',
-        //     ]
-        // ]);
-
-        // $retorno = json_decode($response->getBody(), true);
-
-        // if (isset($retorno['result']) && $retorno['result'] == '1') {
-
-        //     $message = null;
-        //     $total = 0;
-        //     $i = 1;
-        //     foreach ($retorno['obj']['datas'] as $estacao) {
-        //         $message .= "⚡*Gerador {$i} ({$estacao['alias']})*:\n" .
-        //             "Energia gerada: {$estacao['eToday']}kWh\n" .
-        //             "Potência atual: {$estacao['pac']}W\n" .
-        //             "Status: {$this->status($estacao['status'])}\n\n";
-
-        //         $total += floatval($estacao['eToday']);
-        //         $i++;
-        //     }
-
-        //     $message .= "\n🔋*Total:* {$total}kWh";
-
-        //     foreach ($telegramChatIds as $chatId) {
-        //         Telegram::sendMessage([
-        //             'chat_id' => $chatId,
-        //             'text' => $message,
-        //             'parse_mode' => 'Markdown',
-        //         ]);
-        //     }
-
-        //     $this->info(str_replace('*', ' ', $message));
-        // } else {
-        //     $this->error('Erro ao verificar a energia gerada');
-        // }
+            if (isset($retorno['result']) && $retorno['result'] == '1') {
+                foreach ($retorno['obj']['datas'] as $estacao) {
+                    $this->updateSensorService->update($estacao);
+                }
+            } else {
+                throw new Exception('Erro ao verificar a energia da planta ' . $planta['name']);
+            }
+        }
     }
 }
