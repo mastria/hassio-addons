@@ -50,6 +50,7 @@ class UpdateSensorService
             'unique_id' => 'sensor.' . $estacao['alias'],
         ];
 
+        $estacao['status'] = $this->status($estacao['status']);
         $data['attributes'] = array_merge($data['attributes'], $estacao);
 
         $response = $this->CLIENT->post('states/sensor.' . $estacao['alias'], [
