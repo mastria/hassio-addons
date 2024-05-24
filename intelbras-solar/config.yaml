@@ -1,6 +1,6 @@
 name: "Intelbras Solar"
 description: Integração com o painel da Intelbras Solar
-version: 1.0.4
+version: 1.0.5
 slug: intelbras-solar
 url: https://github.com/mastria/hassio-addons/tree/main/intelbras-solar
 arch:
