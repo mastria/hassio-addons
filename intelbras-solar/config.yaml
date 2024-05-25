@@ -1,8 +1,8 @@
-name: "Intelbras Solar Beta"
+name: "Intelbras Solar"
 description: Integração com o painel da Intelbras Solar
 version: 1.0.6
-slug: intelbras-solar-beta
-url: https://github.com/mastria/hassio-addons-beta/tree/main/intelbras-solar
+slug: intelbras-solar
+url: https://github.com/mastria/hassio-addons/tree/main/intelbras-solar
 arch:
   - aarch64
   - amd64
