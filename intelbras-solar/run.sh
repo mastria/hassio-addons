@@ -13,6 +13,5 @@ export INTELBRAS_USER
 export INTELBRAS_PASSWORD
 export LOG_LEVEL
 
-echo "Running schedules with log level: $LOG_LEVEL..."
-sed -i "s/loglevel=debug/loglevel=$LOG_LEVEL/" /home/app/docker-files/supervisord/app.conf
+echo "Running schedules..."
 /usr/bin/supervisord -c /home/app/docker-files/supervisord/app.conf
