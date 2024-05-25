@@ -13,5 +13,7 @@ export INTELBRAS_USER
 export INTELBRAS_PASSWORD
 export LOG_LEVEL
 
+php artisan intelbras:verificar-geracao
+
 echo "Running schedules..."
 /usr/bin/supervisord -c /home/app/docker-files/supervisord/app.conf
