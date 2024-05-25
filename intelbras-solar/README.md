@@ -3,9 +3,13 @@
     <a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="120" alt="Laravel Logo"></a>
 </p>
 
-## Intelbras Solar
+## Sobre
 
 A aplicação foi desenvolvida utilizando o framework [Laravel](https://laravel.com/) com intuito de integrar as informações da energia gerada contidas no painel da [Intelbras Solar](http://solar-monitoramento.intelbras.com.br) com [Home Assistant](https://www.home-assistant.io/).
+
+<br>
+
+A atualização ocorre a cada 5 minutos (tempo médio de envio das informações dos inversores para os servidores da Intelbras) das 6h às 20h.
 
 <br>
 
@@ -14,11 +18,12 @@ A aplicação foi desenvolvida utilizando o framework [Laravel](https://laravel.
 1. Adicione nosso repositório de complementos Hass.io à sua instância Hass.io.
 <br>
 
-`https://github.com/mastria/hassio-addons`
+   `https://github.com/mastria/hassio-addons`
 <br>
 
-[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/mastria/hassio-addons)
+   [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/mastria/hassio-addons)
 <br><br>
+
 2. Adicione as informações de login nas configurações do addon
 
 <br>
