@@ -15,7 +15,7 @@ A atualização ocorre a cada 5 minutos (tempo médio de envio das informações
 
 
 
-#### - Adicione nosso repositório de complementos Hass.io à sua instância Hass.io.
+#### 1. Adicione nosso repositório de complementos Hass.io à sua instância Hass.io.
 <br>
 
 
@@ -25,7 +25,7 @@ A atualização ocorre a cada 5 minutos (tempo médio de envio das informações
 [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https://github.com/mastria/hassio-addons)
 <br><br>
 
-#### - Adicione as informações de login nas configurações do addon.
+#### 2. Adicione as informações de login nas configurações do addon.
 
 <br>
 
