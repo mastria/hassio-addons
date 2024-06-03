@@ -1,4 +1,8 @@
 
+## v1.0.8 (03-06-2024)
+
+- Minor bugs fixed
+
 ## v1.0.7 (24-05-2024)
 
 - Log level fix
