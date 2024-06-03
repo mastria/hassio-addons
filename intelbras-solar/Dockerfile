@@ -22,16 +22,23 @@ RUN apk add --no-cache \
     php82-xmlwriter \
     php82-simplexml \
     php82-dom \
-    php82-tokenizer \
     php82-pecl-redis \
     php82-pcntl \
-    php82-posix
-
+    php82-posix \
+    php82-session
 
 RUN mkdir -p /home/app
 COPY ./ /home/app
 WORKDIR /home/app
-RUN composer install --no-interaction --no-dev
+
+RUN echo "extension=session.so" >> /etc/php82/php.ini \
+    && echo "extension=fileinfo.so" >> /etc/php82/php.ini \
+    && echo "extension=tokenizer.so" >> /etc/php82/php.ini \
+    && echo "extension=dom.so" >> /etc/php82/php.ini
+
+RUN composer install --no-interaction --no-dev \
+    && php -m
+
 RUN chmod a+x run.sh
 
 CMD [ "/home/app/run.sh" ]

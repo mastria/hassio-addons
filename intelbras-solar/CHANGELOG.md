@@ -1,4 +1,8 @@
 
+## v1.0.9 (03-06-2024)
+
+- PHP dependencies fixed
+
 ## v1.0.8 (03-06-2024)
 
 - Minor bugs fixed
