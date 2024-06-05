@@ -1,3 +1,7 @@
+## v1.1.2 (05-06-2024)
+
+- Update sensor state class
+
 ## v1.1.1 (05-06-2024)
 
 - Minor bugs fixed

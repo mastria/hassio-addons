@@ -45,7 +45,7 @@ class UpdateSensorService
                 'unit_of_measurement' => 'kWh',
                 'icon' => 'mdi:solar-power-variant-outline',
                 'device_class' => 'energy',
-                'state_class' => 'measurement',
+                'state_class' => 'total_increasing',
             ],
             'unique_id' => 'intelbras_' . $estacao['sn'],
         ];
