@@ -47,14 +47,14 @@ class UpdateSensorService
                 'device_class' => 'energy',
                 'state_class' => 'measurement',
             ],
-            'unique_id' => 'intelbras_' . $estacao['alias'],
+            'unique_id' => 'intelbras_' . $estacao['sn'],
         ];
 
         $estacao['status'] = $this->status($estacao['status']);
         $data['attributes'] = array_merge($data['attributes'], $estacao);
 
         try {
-            $response = $this->CLIENT->post('states/sensor.intelbras_' . $estacao['alias'], [
+            $response = $this->CLIENT->post('states/sensor.intelbras_' . $estacao['sn'], [
                 'json' => $data,
             ]);
 
