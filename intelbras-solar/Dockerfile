@@ -1,9 +1,11 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
+RUN echo "America/Sao_Paulo" > /etc/timezone && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+
 RUN apk add --no-cache \
     supervisor \
-    composer \
     php82 \
     php82-common \
     php82-fpm \
@@ -26,6 +28,10 @@ RUN apk add --no-cache \
     php82-pcntl \
     php82-posix \
     php82-session
+
+RUN ln -sf /usr/bin/php82 /usr/bin/php
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN mkdir -p /home/app
 COPY ./ /home/app
