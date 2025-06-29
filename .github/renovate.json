@@ -1,0 +1,13 @@
+{
+  "extends": ["config:base"],
+  "regexManagers": [
+    {
+      "fileMatch": ["^intelbras-solar/build\\.yaml$"],
+      "matchStrings": [
+        "amd64:\\s+ghcr\\.io/home-assistant/amd64-base:(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "ghcr.io/home-assistant/amd64-base"
+    }
+  ]
+}
