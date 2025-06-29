@@ -1,3 +1,7 @@
+## v1.1.5
+
+- Update Add-on Base Images to 18.0.0
+
 ## v1.1.4
 
 - Update Add-on Base Images to 17.2.3
