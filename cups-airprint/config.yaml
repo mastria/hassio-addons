@@ -1,6 +1,7 @@
 name: CUPS
 version: 1.0.0
 slug: cupsik
+url: https://github.com/mastria/hassio-addons/tree/main/cups-airprint
 description: A CUPS print server with working AirPrint
 arch:
   - aarch64
