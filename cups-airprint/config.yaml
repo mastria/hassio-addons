@@ -21,5 +21,3 @@ ports_description:
   631/udp: For other devices on the local network to print to this server
 map:
   - config:rw
-devices:
-  - /dev/bus/usb:/dev/bus/usb:rwm
