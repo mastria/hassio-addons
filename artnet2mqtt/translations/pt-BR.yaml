@@ -1,0 +1,47 @@
+---
+configuration:
+  log_level:
+    name: Nível de Log
+    description: Define o nível de verbosidade para os logs do addon
+  mqtt:
+    name: Configuração MQTT
+    description: Configurações de conexão com o broker MQTT
+  mqtt.host:
+    name: Host MQTT
+    description: Nome do host ou endereço IP do broker MQTT
+  mqtt.port:
+    name: Porta MQTT
+    description: Número da porta para conexão com o broker MQTT
+  mqtt.username:
+    name: Usuário MQTT
+    description: Nome de usuário para autenticação no broker MQTT (opcional)
+  mqtt.password:
+    name: Senha MQTT
+    description: Senha para autenticação no broker MQTT (opcional)
+  discovery_prefix:
+    name: Prefixo de Descoberta
+    description: Prefixo MQTT Discovery para integração com o Home Assistant
+  node_name:
+    name: Nome do Nó
+    description: Nome único para esta instância da bridge ArtNet
+  universe:
+    name: Universo ArtNet
+    description: Número do universo ArtNet para escutar (0-32767)
+  start_channel:
+    name: Canal Inicial
+    description: Primeiro canal DMX a monitorar (1-512)
+  channels:
+    name: Número de Canais
+    description: Número de canais DMX consecutivos a monitorar
+  throttle_ms:
+    name: Throttle (ms)
+    description: Tempo mínimo entre publicações MQTT por canal em milissegundos
+  object_prefix:
+    name: Prefixo do Objeto
+    description: Prefixo para nomes de entidades e tópicos MQTT
+  ip_publish_interval_s:
+    name: Intervalo de Publicação do IP
+    description: Intervalo em segundos para publicar o endereço IP da bridge
+  publish_on_change_only:
+    name: Publicar Apenas em Mudanças
+    description: Publicar mensagens MQTT apenas quando os valores dos canais mudarem

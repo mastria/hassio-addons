@@ -7,6 +7,7 @@
 This repository contains the following add-ons
 
 ### [Intelbras Solar](./intelbras-solar)
+### [Art-Net2MQTT](./artnet2mqtt)
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]

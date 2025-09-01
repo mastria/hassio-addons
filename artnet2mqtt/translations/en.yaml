@@ -1,0 +1,47 @@
+---
+configuration:
+  log_level:
+    name: Log Level
+    description: Set the verbosity level for addon logging
+  mqtt:
+    name: MQTT Configuration
+    description: MQTT broker connection settings
+  mqtt.host:
+    name: MQTT Host
+    description: Hostname or IP address of the MQTT broker
+  mqtt.port:
+    name: MQTT Port
+    description: Port number for MQTT broker connection
+  mqtt.username:
+    name: MQTT Username
+    description: Username for MQTT broker authentication (optional)
+  mqtt.password:
+    name: MQTT Password
+    description: Password for MQTT broker authentication (optional)
+  discovery_prefix:
+    name: Discovery Prefix
+    description: MQTT Discovery prefix for Home Assistant integration
+  node_name:
+    name: Node Name
+    description: Unique name for this ArtNet bridge instance
+  universe:
+    name: ArtNet Universe
+    description: ArtNet universe number to listen to (0-32767)
+  start_channel:
+    name: Start Channel
+    description: First DMX channel to monitor (1-512)
+  channels:
+    name: Number of Channels
+    description: Number of consecutive DMX channels to monitor
+  throttle_ms:
+    name: Throttle (ms)
+    description: Minimum time between MQTT publishes per channel in milliseconds
+  object_prefix:
+    name: Object Prefix
+    description: Prefix for MQTT entity names and topics
+  ip_publish_interval_s:
+    name: IP Publish Interval
+    description: Interval in seconds to publish bridge IP address
+  publish_on_change_only:
+    name: Publish on Change Only
+    description: Only publish MQTT messages when channel values change

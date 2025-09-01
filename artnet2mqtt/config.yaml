@@ -1,0 +1,47 @@
+name: Art-Net2MQTT
+slug: artnet2mqtt
+version: "1.0.0"
+description: Receives Art-Net (ArtDMX) and publishes channels via MQTT
+url: https://github.com/mastria/hassio-addons/tree/main/artnet2mqtt
+arch:
+  - aarch64
+  - amd64
+  - armv7
+host_network: true
+init: false
+startup: services
+ports:
+  6454/udp: 6454
+options:
+  log_level: error
+  mqtt:
+    host: core-mosquitto
+    port: 1883
+    username:
+    password:
+  discovery_prefix: homeassistant
+  node_name: artnet_bridge
+  universe: 0
+  start_channel: 1
+  channels: 20
+  throttle_ms: 20
+  object_prefix: artnet
+  ip_publish_interval_s: 30
+  publish_on_change_only: true
+
+schema:
+  log_level: list(trace|debug|info|notice|warning|error|fatal)
+  mqtt:
+    host: str
+    port: int
+    username: str?
+    password: str?
+  discovery_prefix: str
+  node_name: str
+  universe: int(0,15)
+  start_channel: int
+  channels: int
+  throttle_ms: int
+  object_prefix: str
+  ip_publish_interval_s: int
+  publish_on_change_only: bool

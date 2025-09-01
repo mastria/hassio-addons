@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bashio
+# vim: ft=bash
+# shellcheck shell=bash
+# ==============================================================================
+# Finish script for Art-Net2MQTT service  
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+declare exit_code
+readonly exit_code=${1}
+
+bashio::log.info "Service exited with code ${exit_code}"
+
+if [[ "${exit_code}" -ne 0 ]] && [[ "${exit_code}" -ne 256 ]]; then
+    bashio::log.warning "Art-Net2MQTT service halted with exit code ${exit_code}"
+    bashio::log.warning "Please check the add-on logs for more information"
+fi
+
+bashio::log.info "Art-Net2MQTT service stopped."

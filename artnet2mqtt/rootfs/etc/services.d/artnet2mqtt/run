@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Start the Art-Net2MQTT service
+# s6-overlay docs: https://github.com/just-containers/s6-overlay
+# ==============================================================================
+
+bashio::log.info "Starting Art-Net2MQTT service..."
+
+# Check if configuration is available
+bashio::config.require "mqtt.host" "MQTT host is required"
+
+# Log configuration details
+UNIVERSE=$(bashio::config 'universe')
+START_CHANNEL=$(bashio::config 'start_channel')
+CHANNELS=$(bashio::config 'channels')
+MQTT_HOST=$(bashio::config 'mqtt.host')
+MQTT_PORT=$(bashio::config 'mqtt.port')
+
+bashio::log.info "Configuration:"
+bashio::log.info "  MQTT: ${MQTT_HOST}:${MQTT_PORT}"
+bashio::log.info "  Universe: ${UNIVERSE}"
+bashio::log.info "  Channels: ${START_CHANNEL}-$((START_CHANNEL + CHANNELS - 1))"
+
+# Start the Art-Net2MQTT Python application
+bashio::log.info "Starting Art-Net2MQTT application..."
+python3 /app/main.py
