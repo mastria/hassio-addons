@@ -11,6 +11,10 @@ A aplicação foi desenvolvida utilizando o framework [Laravel](https://laravel.
 
 A atualização ocorre a cada 5 minutos (tempo médio de envio das informações dos inversores para os servidores da Intelbras) das 6h às 20h.
 
+### Envio de Resumos via Telegram
+
+O addon permite o envio automático de resumos de geração de energia através do Telegram. Configure o token do bot e os IDs dos chats para receber relatórios periódicos com a energia gerada por cada inversor. O intervalo de envio é configurável (1, 2, 3, 4, 5, 6, 12 ou 24 horas).
+
 ## Instalação
 
 

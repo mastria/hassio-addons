@@ -1,24 +1,49 @@
 name: "Intelbras Solar"
 description: Integração com o painel da Intelbras Solar
-version: 1.1.5
+version: 1.2.0
 slug: intelbras-solar
 url: https://github.com/mastria/hassio-addons/tree/main/intelbras-solar
 arch:
   - aarch64
   - amd64
-  - armhf
-  - armv7
-  - i386
 ports:
   8000/tcp: 8000
 options:
   usuario: ""
   senha: ""
   log_level: info
+  telegram_bot_token: ""
+  telegram_chat_ids: ""
+  schedule_interval: 1
 schema:
-  usuario: str?
-  senha: password?
-  log_level: list(emergency|alert|critical|error|warning|notice|info|debug)
+  usuario:
+    type: str
+    name: Usuário
+    description: Usuário de acesso ao painel Intelbras Solar
+    required: false
+  senha:
+    type: password
+    name: Senha
+    description: Senha de acesso ao painel Intelbras Solar
+    required: false
+  log_level:
+    type: list(emergency|alert|critical|error|warning|notice|info|debug)
+    name: Nível de Log
+    description: Define o nível de detalhamento dos logs (warning recomendado para produção)
+  telegram_bot_token:
+    type: str
+    name: Token do Bot Telegram
+    description: Token do bot do Telegram para envio de resumos (deixe vazio para desabilitar)
+    required: false
+  telegram_chat_ids:
+    type: str
+    name: IDs dos Chats
+    description: IDs dos chats do Telegram separados por vírgula (ex. 123456,789012)
+    required: false
+  schedule_interval:
+    type: list(1|2|3|4|5|6|12|24)
+    name: Intervalo do Resumo (horas)
+    description: Intervalo em horas para envio do resumo de geração de energia
 startup: application
 init: false
 homeassistant_api: true

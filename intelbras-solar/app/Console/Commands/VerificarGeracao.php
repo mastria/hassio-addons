@@ -59,6 +59,7 @@ class VerificarGeracao extends Command
             throw new Exception('Erro ao verificar as plantas');
         }
 
+        // Inversores
         foreach ($plantas as $planta) {
             $response = $client->request('POST', 'http://solar-monitoramento.intelbras.com.br/panel/getDevicesByPlantList', [
                 'form_params' => [

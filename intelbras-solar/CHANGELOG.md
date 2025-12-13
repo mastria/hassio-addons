@@ -1,3 +1,10 @@
+## v1.2.0
+
+- Log level fix
+- Dependencies update
+- Update Add-on Base Images to 19.0.0
+- New Telegram notification feature
+
 ## v1.1.5
 
 - Update Add-on Base Images to 18.0.0
