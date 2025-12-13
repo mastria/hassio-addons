@@ -6,6 +6,9 @@ url: https://github.com/mastria/hassio-addons/tree/main/intelbras-solar
 arch:
   - aarch64
   - amd64
+  - armhf
+  - armv7
+  - i386
 ports:
   8000/tcp: 8000
 options:
