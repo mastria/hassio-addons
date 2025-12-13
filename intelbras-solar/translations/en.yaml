@@ -1,0 +1,26 @@
+---
+configuration:
+  usuario:
+    name: Username
+    description: >-
+      Username to access the Intelbras Solar panel.
+  senha:
+    name: Password
+    description: >-
+      Password to access the Intelbras Solar panel.
+  log_level:
+    name: Log Level
+    description: >-
+      Defines the log level detail (warning recommended for production).
+  telegram_bot_token:
+    name: Telegram Bot Token
+    description: >-
+      Telegram bot token for sending summaries (leave empty to disable).
+  telegram_chat_ids:
+    name: Chat IDs
+    description: >-
+      Telegram chat IDs separated by comma (e.g., 123456,789012).
+  schedule_interval:
+    name: Summary Interval (hours)
+    description: >-
+      Interval in hours for sending energy generation summaries.

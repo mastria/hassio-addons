@@ -1,0 +1,26 @@
+---
+configuration:
+  usuario:
+    name: Usuário
+    description: >-
+      Usuário de acesso ao painel Intelbras Solar.
+  senha:
+    name: Senha
+    description: >-
+      Senha de acesso ao painel Intelbras Solar.
+  log_level:
+    name: Nível de Log
+    description: >-
+      Define o nível de detalhamento dos logs (warning recomendado para produção).
+  telegram_bot_token:
+    name: Token do Bot Telegram
+    description: >-
+      Token do bot do Telegram para envio de resumos (deixe vazio para desabilitar).
+  telegram_chat_ids:
+    name: IDs dos Chats
+    description: >-
+      IDs dos chats do Telegram separados por vírgula (ex: 123456,789012).
+  schedule_interval:
+    name: Intervalo do Resumo (horas)
+    description: >-
+      Intervalo em horas para envio do resumo de geração de energia.
