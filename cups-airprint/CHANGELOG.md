@@ -1,4 +1,4 @@
-## v1.1.0
+## v1.1.2
 
 ### 🚀 Improvements
 
@@ -46,4 +46,3 @@
 - HP drivers (printer-driver-hpcups)
 - Basic AirPrint support
 - Web interface on port 631
-

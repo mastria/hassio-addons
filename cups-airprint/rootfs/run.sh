@@ -1,15 +1,10 @@
 #!/usr/bin/with-contenv bashio
-set -e
 
 bashio::log.info "Iniciando addon CUPS AirPrint..."
 
 # Configura nível de log
 LOG_LEVEL=$(bashio::config 'log_level' 'info')
 bashio::log.level "${LOG_LEVEL}"
-
-# Aumenta limite de arquivos abertos
-ulimit -n 1048576
-bashio::log.debug "Limite de arquivos abertos configurado: $(ulimit -n)"
 
 # Prepara diretórios persistentes
 if [ ! -d "/config/cups" ]; then
@@ -37,18 +32,6 @@ if bashio::debug; then
     fi
 fi
 
-# Inicia D-Bus (necessário para Avahi)
-if [ ! -d "/run/dbus" ]; then
-    mkdir -p /run/dbus
-fi
-
-if [ -f "/var/run/dbus/pid" ]; then
-    rm -f /var/run/dbus/pid
-fi
-
-bashio::log.info "Iniciando D-Bus daemon..."
-dbus-daemon --system --fork
-
 # Inicia Avahi daemon (para AirPrint/Bonjour)
 bashio::log.info "Iniciando Avahi daemon para AirPrint..."
 avahi-daemon --daemonize --no-chroot
@@ -60,6 +43,4 @@ sleep 2
 bashio::log.info "Interface web do CUPS disponível em: http://homeassistant.local:631"
 bashio::log.info "Usuário: print | Senha: print"
 
-# Inicia CUPS em foreground
-bashio::log.info "Iniciando servidor CUPS..."
-exec cupsd -f
+bashio::log.info "Inicialização completa. Serviços gerenciados pelo s6-overlay."

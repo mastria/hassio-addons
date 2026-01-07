@@ -1,7 +1,11 @@
 #!/usr/bin/with-contenv bashio
 
-ulimit -n 1048576
+bashio::log.info "Starting D-Bus daemon from S6"
 
-bashio::log.info "Starting DBUS daemon from S6"
+# Garante que o diretório existe
+mkdir -p /var/run/dbus
 
-dbus-daemon --system --nofork
+# Remove PID file antigo se existir
+rm -f /var/run/dbus/pid
+
+exec dbus-daemon --system --nofork
