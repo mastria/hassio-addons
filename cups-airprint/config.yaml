@@ -1,23 +1,37 @@
-name: CUPS
-version: 1.0.0
-slug: cupsik
+name: CUPS AirPrint
+version: 1.1.0
+slug: cups-airprint
 url: https://github.com/mastria/hassio-addons/tree/main/cups-airprint
-description: A CUPS print server with working AirPrint
+description: CUPS print server with AirPrint support for network printing
 arch:
   - aarch64
   - amd64
-  - armhf
-  - armv7
-  - i386
+startup: services
+boot: auto
+# Acesso USB para impressoras
 usb: true
+# udev necessário para detecção automática de dispositivos USB
+udev: true
+# Acesso D-Bus para Avahi/Bonjour (AirPrint)
+host_dbus: true
 init: false
 homeassistant_api: true
+# Rede do host necessária para broadcast do AirPrint
 host_network: true
+# Privilégios necessários para acesso a dispositivos USB e raw sockets
+privileged:
+  - SYS_RAWIO
+  - NET_ADMIN
+  - NET_RAW
 ports:
   631/tcp: 631
-  631/udp: 631
+  5353/udp: null
 ports_description:
-  631/tcp: For other devices on the local network to print to this server
-  631/udp: For other devices on the local network to print to this server
+  631/tcp: CUPS web interface and IPP printing
+  5353/udp: mDNS/Bonjour for AirPrint discovery
 map:
-  - config:rw
+  - addon_config:rw
+options:
+  log_level: info
+schema:
+  log_level: list(debug|info|warning|error)
