@@ -16,14 +16,15 @@ if [ ! -d "/config/cups" ]; then
     bashio::log.info "Primeira execução: criando configuração persistente do CUPS"
     mkdir -p /config/cups
     cp -R /etc/cups/* /config/cups/ 2>/dev/null || true
+else
+    bashio::log.info "Restaurando configuração persistente do CUPS"
+    # Copia config persistente para o local esperado pelo CUPS
+    cp -R /config/cups/* /etc/cups/ 2>/dev/null || true
 fi
 
-# Vincula configuração persistente
-if [ ! -L "/etc/cups" ]; then
-    bashio::log.info "Vinculando diretório de configuração do CUPS"
-    rm -rf /etc/cups
-    ln -s /config/cups /etc/cups
-fi
+# Garante que o diretório de spool existe
+mkdir -p /var/spool/cups
+mkdir -p /var/cache/cups
 
 # Garante permissões corretas
 bashio::log.info "Configurando permissões de usuário"
@@ -38,11 +39,14 @@ if bashio::debug; then
 fi
 
 # Inicia Avahi daemon em background (necessário para AirPrint/Bonjour)
+# Nota: Com host_dbus=true, o Avahi pode falhar mas não é crítico
 bashio::log.info "Iniciando Avahi daemon para AirPrint..."
-avahi-daemon --daemonize --no-chroot || bashio::log.warning "Avahi falhou ao iniciar"
-
-# Aguarda Avahi estar pronto
-sleep 2
+if avahi-daemon --daemonize --no-chroot 2>&1; then
+    bashio::log.info "Avahi iniciado com sucesso"
+    sleep 2
+else
+    bashio::log.warning "Avahi não iniciou (normal com host_dbus). AirPrint pode não funcionar."
+fi
 
 # Informa sobre acesso à interface web
 bashio::log.info "======================================"
@@ -53,4 +57,19 @@ bashio::log.info "======================================"
 
 # Inicia CUPS em foreground (processo principal do container)
 bashio::log.info "Iniciando servidor CUPS em foreground..."
+
+# Testa se cupsd está disponível
+if ! command -v cupsd &> /dev/null; then
+    bashio::log.error "cupsd não encontrado!"
+    exit 1
+fi
+
+# Testa configuração do CUPS
+bashio::log.info "Verificando configuração do CUPS..."
+if ! cupsd -t; then
+    bashio::log.error "Erro na configuração do CUPS!"
+    exit 1
+fi
+
+bashio::log.info "CUPS iniciando..."
 exec cupsd -f
