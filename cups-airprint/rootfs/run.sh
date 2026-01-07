@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv bashio
-set -e
 
 bashio::log.info "Iniciando addon CUPS AirPrint..."
 
@@ -8,6 +7,7 @@ LOG_LEVEL=$(bashio::config 'log_level' 'info')
 bashio::log.level "${LOG_LEVEL}"
 
 # Prepara diretórios necessários
+bashio::log.info "Preparando diretórios..."
 mkdir -p /var/run/avahi-daemon
 mkdir -p /run/cups
 
@@ -20,13 +20,13 @@ fi
 
 # Vincula configuração persistente
 if [ ! -L "/etc/cups" ]; then
-    bashio::log.debug "Vinculando diretório de configuração do CUPS"
+    bashio::log.info "Vinculando diretório de configuração do CUPS"
     rm -rf /etc/cups
     ln -s /config/cups /etc/cups
 fi
 
 # Garante permissões corretas
-bashio::log.debug "Configurando permissões de usuário"
+bashio::log.info "Configurando permissões de usuário"
 usermod -aG lp,lpadmin print 2>/dev/null || true
 
 # Lista dispositivos USB disponíveis
@@ -39,16 +39,18 @@ fi
 
 # Inicia Avahi daemon em background (necessário para AirPrint/Bonjour)
 bashio::log.info "Iniciando Avahi daemon para AirPrint..."
-avahi-daemon --daemonize --no-chroot
+avahi-daemon --daemonize --no-chroot || bashio::log.warning "Avahi falhou ao iniciar"
 
 # Aguarda Avahi estar pronto
 sleep 2
 
 # Informa sobre acesso à interface web
-bashio::log.info "Interface web do CUPS disponível em: http://homeassistant.local:631"
-bashio::log.info "Através do Ingress ou diretamente na porta 631"
+bashio::log.info "======================================"
+bashio::log.info "Interface web do CUPS disponível!"
+bashio::log.info "URL: http://homeassistant.local:631"
 bashio::log.info "Usuário: print | Senha: print"
+bashio::log.info "======================================"
 
 # Inicia CUPS em foreground (processo principal do container)
-bashio::log.info "Iniciando servidor CUPS..."
+bashio::log.info "Iniciando servidor CUPS em foreground..."
 exec cupsd -f
