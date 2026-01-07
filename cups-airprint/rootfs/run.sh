@@ -38,14 +38,22 @@ if bashio::debug; then
     fi
 fi
 
+# Inicia D-Bus system daemon em background
+bashio::log.info "Iniciando D-Bus daemon..."
+mkdir -p /var/run/dbus
+rm -f /var/run/dbus/pid
+dbus-daemon --system --fork
+
+# Aguarda D-Bus estar pronto
+sleep 1
+
 # Inicia Avahi daemon em background (necessário para AirPrint/Bonjour)
-# Nota: Com host_dbus=true, o Avahi pode falhar mas não é crítico
 bashio::log.info "Iniciando Avahi daemon para AirPrint..."
 if avahi-daemon --daemonize --no-chroot 2>&1; then
     bashio::log.info "Avahi iniciado com sucesso"
     sleep 2
 else
-    bashio::log.warning "Avahi não iniciou (normal com host_dbus). AirPrint pode não funcionar."
+    bashio::log.warning "Avahi falhou ao iniciar. AirPrint pode não funcionar."
 fi
 
 # Informa sobre acesso à interface web
@@ -72,4 +80,10 @@ if ! cupsd -t; then
 fi
 
 bashio::log.info "CUPS iniciando..."
-exec cupsd -f
+
+# Define log level do CUPS
+export CUPS_DEBUG_LOG=/dev/stderr
+export CUPS_ERROR_LOG=/dev/stderr
+
+# Inicia CUPS em foreground (processo principal)
+cupsd -f
