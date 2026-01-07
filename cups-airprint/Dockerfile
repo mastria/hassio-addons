@@ -34,7 +34,6 @@ RUN apt-get update \
         cups \
         cups-filters \
         cups-browsed \
-        cups-pdf \
         # Avahi para AirPrint/Bonjour
         avahi-daemon \
         avahi-utils \
