@@ -1,6 +1,0 @@
-#!/usr/bin/env bashio
-
-# Prepara diretórios necessários para o addon
-mkdir -p /var/run/avahi-daemon
-mkdir -p /run/cups
-
