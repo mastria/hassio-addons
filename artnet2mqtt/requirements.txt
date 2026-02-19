@@ -1,2 +1,1 @@
 paho-mqtt==2.1.0
-python_artnet==1.2.0

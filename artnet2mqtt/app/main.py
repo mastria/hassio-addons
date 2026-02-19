@@ -2,7 +2,7 @@
 
 """
 ArtNet to MQTT for Home Assistant add-on.
-- Receives ArtDMX (UDP 6454) using python_artnet.
+- Receives ArtDMX (UDP 6454) via a pure-Python UDP socket (no native deps).
 - Publishes per-channel sensors via Home Assistant MQTT Discovery.
 - LWT/availability, publish-on-change, optional per-channel throttle.
 """
@@ -14,8 +14,81 @@ import logging
 import sys
 from collections import defaultdict
 from threading import Thread, Event
+import struct
 import paho.mqtt.client as mqtt
-import python_artnet as Artnet
+
+# ---------------------------------------------------------------------------
+# Pure-Python Art-Net (ArtDMX) listener — no native dependencies
+# ---------------------------------------------------------------------------
+ARTNET_PORT = 6454
+_ARTNET_ID = b"Art-Net\x00"
+_OPCODE_DMX = 0x5000  # little-endian on the wire → 0x00 0x50
+
+
+class _ArtNetPacket:
+    """Minimal ArtDMX packet representation."""
+
+    __slots__ = ("universe", "data", "sequence", "physical")
+
+    def __init__(self, universe: int, data: bytes, sequence: int = 0, physical: int = 0):
+        self.universe = universe
+        self.data = data
+        self.sequence = sequence
+        self.physical = physical
+
+
+class _ArtNetListener:
+    """
+    Thin UDP listener that parses ArtDMX packets.
+
+    Art-Net packet layout (ArtDmx):
+      0-7   : "Art-Net\0"  (ID)
+      8-9   : OpCode 0x5000 (LE)
+      10-11 : ProtVer (BE, must be >= 14)
+      12    : Sequence
+      13    : Physical
+      14-15 : Universe (LE, 15-bit)
+      16-17 : Length (BE)
+      18+   : DMX data
+    """
+
+    def __init__(self, host: str = "0.0.0.0", port: int = ARTNET_PORT):
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._sock.bind((host, port))
+
+    def readPacket(self, timeout: float = 0.05) -> "_ArtNetPacket | None":
+        """Return next ArtDMX packet or None on timeout."""
+        self._sock.settimeout(timeout)
+        try:
+            raw, _ = self._sock.recvfrom(65535)
+        except socket.timeout:
+            return None
+        except OSError:
+            return None
+        return self._parse(raw)
+
+    @staticmethod
+    def _parse(data: bytes) -> "_ArtNetPacket | None":
+        if len(data) < 18:
+            return None
+        if data[:8] != _ARTNET_ID:
+            return None
+        opcode = struct.unpack_from("<H", data, 8)[0]
+        if opcode != _OPCODE_DMX:
+            return None
+        sequence = data[12]
+        physical = data[13]
+        universe = struct.unpack_from("<H", data, 14)[0]
+        length = struct.unpack_from(">H", data, 16)[0]
+        dmx_data = data[18: 18 + length]
+        return _ArtNetPacket(universe, dmx_data, sequence, physical)
+
+    def close(self):
+        try:
+            self._sock.close()
+        except OSError:
+            pass
 
 # Configure logging (will be updated based on config)
 logging.basicConfig(
@@ -146,9 +219,9 @@ class ArtNet2MQTT:
         self.client.reconnect_delay_set(min_delay=1, max_delay=30)
 
     def _setup_artnet(self):
-        """Setup ArtNet receiver."""
-        self.artnet = Artnet.Artnet()
-        logger.info("ArtNet instance created")
+        """Setup ArtNet receiver (pure-Python UDP socket, no native deps)."""
+        self.artnet = _ArtNetListener()
+        logger.info("ArtNet UDP listener bound to 0.0.0.0:%d", ARTNET_PORT)
 
     # ---------- MQTT callbacks ----------
 
@@ -336,58 +409,38 @@ class ArtNet2MQTT:
         """Thread to handle ArtNet listening."""
         logger.info("Starting ArtNet listener thread...")
         packet_count = 0
-        universe_packets = defaultdict(int)
+        universe_packets: defaultdict = defaultdict(int)
         try:
             while not self.stop_event.is_set():
-                packet = None
+                pkt = self.artnet.readPacket(timeout=0.05)
+                if pkt is None:
+                    continue
 
-                # Consume the buffer (one per universe) and only get the desired universe
-                if hasattr(self.artnet, "readBuffer"):
-                    bufs = self.artnet.readBuffer()
-                    if bufs:
-                        logger.debug(f"Found {len(bufs)} packets in buffer")
-                        for pkt in bufs:
-                            pkt_universe = getattr(pkt, "universe", "unknown")
-                            universe_packets[pkt_universe] += 1
-                            logger.debug(f"Packet from universe {pkt_universe}")
-                            if pkt_universe == self.universe:
-                                packet = pkt
-                                logger.info(f"✅ Selected packet from configured universe {self.universe}")
-                                break
+                pkt_universe = pkt.universe
+                universe_packets[pkt_universe] += 1
+                logger.debug("Received packet from universe %s", pkt_universe)
 
-                # Fallback: last global packet, but only if it's from the desired universe
-                if packet is None and hasattr(self.artnet, "readPacket"):
-                    pkt = self.artnet.readPacket()
-                    if pkt is not None:
-                        pkt_universe = getattr(pkt, "universe", "unknown")
-                        universe_packets[pkt_universe] += 1
-                        logger.debug(f"ReadPacket from universe {pkt_universe}")
-                        if pkt_universe == self.universe:
-                            packet = pkt
-                            logger.info(f"✅ Selected readPacket from configured universe {self.universe}")
+                if pkt_universe != self.universe:
+                    continue
 
-                if packet:
-                    packet_count += 1
-                    self._process_artnet_packet(packet)
+                packet_count += 1
+                self._process_artnet_packet(pkt)
 
-                    # Log statistics every 50 packets
-                    if packet_count % 50 == 0:
-                        logger.info(f"📊 Processed {packet_count} packets. Universe stats: {dict(universe_packets)}")
-                        logger.info(f"🎯 Configured universe: {self.universe}")
-                    
-                    time.sleep(0.001)
-                else:
-                    time.sleep(0.01)
+                if packet_count % 50 == 0:
+                    logger.info(
+                        "📊 Processed %d packets. Universe stats: %s",
+                        packet_count,
+                        dict(universe_packets),
+                    )
 
-                # Periodic logging even without packets from the correct universe
-                if packet_count == 0 and len(universe_packets) > 0 and packet_count % 100 == 0:
-                    logger.warning(f"⚠️  Receiving packets but none from configured universe {self.universe}")
-                    logger.warning(f"📡 Available universes: {list(universe_packets.keys())}")
-                    
         except Exception as e:
             logger.error("Error in ArtNet listener: %s", e)
         finally:
-            logger.info(f"ArtNet listener stopped. Final stats - Total: {packet_count}, Universes: {dict(universe_packets)}")
+            logger.info(
+                "ArtNet listener stopped. Total: %d, Universes: %s",
+                packet_count,
+                dict(universe_packets),
+            )
 
     def _process_artnet_packet(self, packet):
         """Process received ArtNet packet into a SimpleFrame and dispatch."""

@@ -7,14 +7,20 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Copy requirements first for better caching
 COPY requirements.txt /tmp/requirements.txt
 
-# Install Python and required packages
+# Install Python and required packages inside an isolated virtual environment.
+# - Never upgrade the Alpine system pip (py3-pip) via pip itself: it creates
+#   a split installation (/usr/lib vs /usr/local/lib) that breaks PATH lookups.
+# - A venv gives clean, reproducible isolation independent of the system Python.
 RUN \
     apk add --no-cache \
         python3 \
         py3-pip \
-    && pip3 install --no-cache-dir --upgrade pip \
-    && pip3 install --no-cache-dir -r /tmp/requirements.txt \
-    && rm -rf /tmp/requirements.txt
+    && python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm -f /tmp/requirements.txt
+
+# Ensure all subsequent python3/pip3 calls use the venv.
+ENV PATH="/opt/venv/bin:${PATH}"
 
 # Copy app files
 COPY app/ /app/
