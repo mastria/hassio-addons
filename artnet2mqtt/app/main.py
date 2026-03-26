@@ -511,12 +511,33 @@ class ArtNet2MQTT:
 
     # ---------- Lifecycle ----------
 
+    def _connect_mqtt_with_retry(self, max_delay: int = 60):
+        """Block until MQTT broker accepts a connection, with exponential backoff."""
+        delay = 2
+        attempt = 0
+        while not self.stop_event.is_set():
+            try:
+                attempt += 1
+                logger.info(
+                    "Connecting to MQTT broker %s:%s (attempt %d)...",
+                    self.mqtt_host, self.mqtt_port, attempt,
+                )
+                self.client.connect(self.mqtt_host, self.mqtt_port, keepalive=60)
+                return  # success
+            except (ConnectionRefusedError, OSError) as e:
+                logger.warning(
+                    "MQTT connection failed (%s). Retrying in %ds...", e, delay
+                )
+                self.stop_event.wait(delay)
+                delay = min(delay * 2, max_delay)
+
     def start(self):
         """Start the ArtNet to MQTT bridge."""
         try:
-            # MQTT
-            logger.info("Connecting to MQTT...")
-            self.client.connect(self.mqtt_host, self.mqtt_port, keepalive=60)
+            # MQTT – retry until broker is ready (e.g. core-mosquitto may start after us)
+            self._connect_mqtt_with_retry()
+            if self.stop_event.is_set():
+                return
             self.client.loop_start()
 
             # Auxiliary threads
