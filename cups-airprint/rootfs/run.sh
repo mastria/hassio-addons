@@ -12,15 +12,20 @@ mkdir -p /var/run/avahi-daemon
 mkdir -p /run/cups
 
 # Prepara diretórios persistentes
-if [ ! -d "/config/cups" ]; then
-    bashio::log.info "Primeira execução: criando configuração persistente do CUPS"
-    mkdir -p /config/cups
-    cp -R /etc/cups/* /config/cups/ 2>/dev/null || true
-else
-    bashio::log.info "Restaurando configuração persistente do CUPS"
-    # Copia config persistente para o local esperado pelo CUPS
-    cp -R /config/cups/* /etc/cups/ 2>/dev/null || true
+PERSISTENT_CUPS="/config/cups"
+
+if [ ! -d "${PERSISTENT_CUPS}" ]; then
+    bashio::log.info "Primeira execução: copiando configuração padrão do CUPS para armazenamento persistente..."
+    mkdir -p "${PERSISTENT_CUPS}"
+    cp -a /etc/cups/. "${PERSISTENT_CUPS}/"
 fi
+
+# Substitui /etc/cups por symlink para o diretório persistente.
+# Assim o CUPS lê e grava DIRETAMENTE em /config/cups, garantindo
+# que impressoras cadastradas sobrevivam a reinicializações.
+rm -rf /etc/cups
+ln -sf "${PERSISTENT_CUPS}" /etc/cups
+bashio::log.info "CUPS apontando para diretório persistente: ${PERSISTENT_CUPS}"
 
 # Garante que o diretório de spool existe
 mkdir -p /var/spool/cups

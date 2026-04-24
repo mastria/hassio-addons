@@ -1,3 +1,9 @@
+## v1.1.9
+
+### 🐛 Fixes
+
+- **Persistent printers:** Fixed issue where printers added via the CUPS web interface were lost after addon restart. `/etc/cups` is now a symlink to the persistent `/config/cups` directory, so CUPS reads and writes directly to persistent storage — no more manual re-registration after reboots.
+
 ## v1.1.3
 
 ### 🚀 Improvements
