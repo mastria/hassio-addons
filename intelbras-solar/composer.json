@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "guzzlehttp/guzzle": "^7.10",
+        "guzzlehttp/guzzle": "^8.0",
         "irazasyed/telegram-bot-sdk": "^3.15",
         "laravel/framework": "^10.50",
         "laravel/sanctum": "^3.3.3",
