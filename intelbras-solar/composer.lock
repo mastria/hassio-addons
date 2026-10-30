@@ -852,23 +852,25 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.8.0",
+            "version": "2.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "21dc724a0583619cd1652f673303492272778051"
+                "reference": "adee536f95101929f262b8c59e8a61472f347d58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/21dc724a0583619cd1652f673303492272778051",
-                "reference": "21dc724a0583619cd1652f673303492272778051",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/adee536f95101929f262b8c59e8a61472f347d58",
+                "reference": "adee536f95101929f262b8c59e8a61472f347d58",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.1 || ^2.0",
-                "ralouphie/getallheaders": "^3.0"
+                "ralouphie/getallheaders": "^3.0",
+                "symfony/deprecation-contracts": "^2.5 || ^3.0",
+                "symfony/polyfill-php80": "^1.25"
             },
             "provide": {
                 "psr/http-factory-implementation": "1.0",
@@ -876,8 +878,9 @@
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8.2",
-                "http-interop/http-factory-tests": "0.9.0",
-                "phpunit/phpunit": "^8.5.44 || ^9.6.25"
+                "http-interop/http-factory-tests": "1.1.0",
+                "jshttp/mime-db": "1.54.0.1",
+                "phpunit/phpunit": "^8.5.52 || ^9.6.34"
             },
             "suggest": {
                 "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
@@ -948,7 +951,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.8.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.13.2"
             },
             "funding": [
                 {
@@ -964,7 +967,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-23T21:21:41+00:00"
+            "time": "2026-10-17T23:49:46+00:00",
+            "published-time": "2026-10-17T23:51:00+00:00"
         },
         {
             "name": "guzzlehttp/uri-template",
@@ -1054,23 +1058,23 @@
         },
         {
             "name": "irazasyed/telegram-bot-sdk",
-            "version": "v3.15.0",
+            "version": "v3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/irazasyed/telegram-bot-sdk.git",
-                "reference": "07146018d173dedfd520fb8f18a50f31e27b1e60"
+                "reference": "b0e7845ec5fb3ddf2088c489a80dca7b59d5df7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/irazasyed/telegram-bot-sdk/zipball/07146018d173dedfd520fb8f18a50f31e27b1e60",
-                "reference": "07146018d173dedfd520fb8f18a50f31e27b1e60",
+                "url": "https://api.github.com/repos/irazasyed/telegram-bot-sdk/zipball/b0e7845ec5fb3ddf2088c489a80dca7b59d5df7f",
+                "reference": "b0e7845ec5fb3ddf2088c489a80dca7b59d5df7f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.5.1",
                 "guzzlehttp/psr7": "^2.5",
-                "illuminate/support": "9 - 12",
+                "illuminate/support": "9 - 13",
                 "league/event": "^2.2 || ^3.0",
                 "php": ">=8.0",
                 "psr/container": "^1.1 || ^2.0",
@@ -1131,9 +1135,10 @@
             ],
             "support": {
                 "issues": "https://github.com/irazasyed/telegram-bot-sdk/issues",
-                "source": "https://github.com/irazasyed/telegram-bot-sdk/tree/v3.15.0"
+                "source": "https://github.com/irazasyed/telegram-bot-sdk/tree/v3.16.0"
             },
-            "time": "2025-02-18T19:03:24+00:00"
+            "time": "2026-03-07T09:57:43+00:00",
+            "published-time": "2026-03-23T06:46:25+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1840,7 +1845,8 @@
                 "issues": "https://github.com/thephpleague/event/issues",
                 "source": "https://github.com/thephpleague/event/tree/3.0.3"
             },
-            "time": "2024-09-04T16:06:53+00:00"
+            "time": "2024-09-04T16:06:53+00:00",
+            "published-time": "2024-09-04T20:43:40+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2711,7 +2717,8 @@
                 "issues": "https://github.com/php-fig/container/issues",
                 "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
-            "time": "2021-11-05T16:47:00+00:00"
+            "time": "2021-11-05T16:47:00+00:00",
+            "published-time": "2021-11-05T16:53:27+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -2761,7 +2768,8 @@
                 "issues": "https://github.com/php-fig/event-dispatcher/issues",
                 "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
             },
-            "time": "2019-01-08T18:20:26+00:00"
+            "time": "2019-01-08T18:20:26+00:00",
+            "published-time": "2019-03-25T15:31:44+00:00"
         },
         {
             "name": "psr/http-client",
@@ -2868,7 +2876,8 @@
             "support": {
                 "source": "https://github.com/php-fig/http-factory"
             },
-            "time": "2024-04-15T12:06:14+00:00"
+            "time": "2024-04-15T12:06:14+00:00",
+            "published-time": "2024-05-10T07:32:19+00:00"
         },
         {
             "name": "psr/http-message",
@@ -2921,7 +2930,8 @@
             "support": {
                 "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2023-04-04T09:54:51+00:00"
+            "time": "2023-04-04T09:54:51+00:00",
+            "published-time": "2023-04-04T09:55:35+00:00"
         },
         {
             "name": "psr/log",
@@ -3145,7 +3155,8 @@
                 "issues": "https://github.com/ralouphie/getallheaders/issues",
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
-            "time": "2019-03-08T08:55:37+00:00"
+            "time": "2019-03-08T08:55:37+00:00",
+            "published-time": "2019-03-08T09:01:32+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -3533,7 +3544,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:21:43+00:00"
+            "time": "2024-09-25T14:21:43+00:00",
+            "published-time": "2025-05-25T20:28:15+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -4719,7 +4731,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-01-02T08:10:11+00:00"
+            "time": "2025-01-02T08:10:11+00:00",
+            "published-time": "2025-08-19T20:34:35+00:00"
         },
         {
             "name": "symfony/polyfill-php83",
@@ -8341,15 +8354,15 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.2"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.11.0"
 }
